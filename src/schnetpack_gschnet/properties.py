@@ -9,6 +9,10 @@ from schnetpack.properties import *
 ## structure
 #: absolute pairwise distances between center atom i and neighbor atom j
 r_ij: Final[str] = "_rij"
+
+Rij: Final[str] = "_Rij"
+
+
 #: indices of trajectories (i.e. all atom placement steps of one system share the index)
 idx_t: Final[str] = "_idx_t"
 

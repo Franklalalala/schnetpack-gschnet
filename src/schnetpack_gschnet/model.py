@@ -6,6 +6,7 @@ from schnetpack.transform import Transform
 from schnetpack.model import AtomisticModel
 from schnetpack.nn.activations import shifted_softplus
 from schnetpack_gschnet.schnet import SchNet
+from schnetpack_gschnet.painn import PaiNN
 from schnetpack.nn import build_mlp
 from schnetpack.nn.scatter import scatter_add
 from schnetpack.nn.radial import GaussianRBF
@@ -35,7 +36,7 @@ class ConditionalGenerativeSchNet(AtomisticModel):
 
     def __init__(
         self,
-        representation: SchNet,
+        representation: List[SchNet, PaiNN],
         atom_types: List[int],
         origin_type: int,
         focus_type: int,
@@ -206,15 +207,49 @@ class ConditionalGenerativeSchNet(AtomisticModel):
             inputs = m(inputs)
         # extract atom-wise features from placed atoms
         inputs = self.extract_atom_wise_features(inputs)
+
+        # print('=====================================================')
+        # print('=====================================================')
+        # print(inputs["representation"])
+        # a = inputs["representation"]
+        # print('=====================================================')
+        # print('=====================================================')
+
         # extract conditioning features from the conditions
         inputs = self.extract_conditioning_features(inputs)
+
+        # print('=====================================================')
+        # print('=====================================================')
+        # print(inputs["representation"])
+        # b = inputs["representation"]
+        # print('=====================================================')
+        # print('=====================================================')
+
         # predict type of the next atom
         inputs = self.predict_type(inputs)
+
+        # print('=====================================================')
+        # print('=====================================================')
+        # print(inputs[properties.distribution_Z])
+        # c = inputs[properties.distribution_Z]
+        # print('=====================================================')
+        # print('=====================================================')
+
         # predict pairwise distances between existing atoms and the next atom
         inputs = self.predict_distances(inputs)
 
+        # print('=====================================================')
+        # print('=====================================================')
+        # print(inputs[properties.distribution_r_ij])
+        # d = inputs[properties.distribution_r_ij]
+        # print('=====================================================')
+        # print('=====================================================')
+
         # apply postprocessing (if enabled)
         inputs = self.postprocess(inputs)
+
+        # raise RuntimeError
+
         return inputs
 
     def extract_atom_wise_features(

@@ -143,6 +143,7 @@ class SchNet(nn.Module):
         # compute atom and pair features
         x = self.embedding(atomic_numbers)
         if properties.r_ij in inputs:
+            # raise RuntimeError
             d_ij = inputs[properties.r_ij]
         else:
             r_ij = inputs[properties.Rij]

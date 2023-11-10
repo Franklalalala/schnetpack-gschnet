@@ -25,6 +25,9 @@ from schnetpack_gschnet.transform import ConnectivityCheck
 __all__ = ["GenerativeAtomsDataModule"]
 
 
+def identity_function(x):
+    return x
+
 class GenerativeAtomsDataModule(AtomsDataModule):
     """
     Base class for atoms datamodules for cG-SchNet.
@@ -240,7 +243,7 @@ class GenerativeAtomsDataModule(AtomsDataModule):
                     num_workers=self.num_preprocessing_workers,
                     shuffle=False,
                     pin_memory=False,
-                    collate_fn=lambda x: x,
+                    collate_fn=identity_function,
                 )
                 subset = np.empty(len(dataset), dtype=bool)
                 _iteration = 0

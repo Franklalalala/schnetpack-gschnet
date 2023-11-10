@@ -152,16 +152,16 @@ class ConditionalGenerativeSchNetTask(AtomisticTask):
     def training_step(self, batch, batch_idx):
         pred = self.predict_without_postprocessing(batch)
         loss = self.loss_fn(pred, batch)
-        self.log("train_loss", loss, on_step=False, on_epoch=True, prog_bar=False)
+        self.log("train_loss", loss, on_step=False, on_epoch=True, prog_bar=False, batch_size=1)
         return loss
 
     def validation_step(self, batch, batch_idx):
         torch.set_grad_enabled(self.grad_enabled)
         pred = self.predict_without_postprocessing(batch)
         loss = self.loss_fn(pred, batch, return_individual_losses=True)
-        self.log("val_loss", loss[0], on_step=False, on_epoch=True, prog_bar=True)
-        self.log("val_loss_type", loss[1], on_step=False, on_epoch=True, prog_bar=False)
-        self.log("val_loss_dist", loss[2], on_step=False, on_epoch=True, prog_bar=False)
+        self.log("val_loss", loss[0], on_step=False, on_epoch=True, prog_bar=True, batch_size=1)
+        self.log("val_loss_type", loss[1], on_step=False, on_epoch=True, prog_bar=False, batch_size=1)
+        self.log("val_loss_dist", loss[2], on_step=False, on_epoch=True, prog_bar=False, batch_size=1)
         return {"val_loss": loss[0]}
 
     def test_step(self, batch, batch_idx):

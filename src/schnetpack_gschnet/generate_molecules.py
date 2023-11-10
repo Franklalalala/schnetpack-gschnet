@@ -1,6 +1,7 @@
 import torch
 import math
 from schnetpack_gschnet import properties
+from schnetpack_gschnet.schnet import SchNet
 from schnetpack.nn.scatter import scatter_add
 from torch.functional import F
 from ase.visualize import view
@@ -236,6 +237,10 @@ def generate_molecules(
             # build inputs dictionary for network
             inputs = build_batch(i, mol_mask)
             # extract representation from network
+            if not type(model.representation) == SchNet:
+                from schnetpack.atomistic.distances import PairwiseDistances
+                pairwise_distance = PairwiseDistances()
+                inputs = pairwise_distance(inputs)
             inputs = model.extract_atom_wise_features(inputs)
             inputs = model.extract_conditioning_features(inputs)
             # predict type distribution
