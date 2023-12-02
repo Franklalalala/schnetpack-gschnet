@@ -7,6 +7,8 @@ from schnetpack.model import AtomisticModel
 from schnetpack.nn.activations import shifted_softplus
 from schnetpack_gschnet.schnet import SchNet
 from schnetpack_gschnet.painn import PaiNN
+from uni_electrolyte.evaluator.model.spatial.leftnet_gen_version import LEFTNet
+
 from schnetpack.nn import build_mlp
 from schnetpack.nn.scatter import scatter_add
 from schnetpack.nn.radial import GaussianRBF
@@ -36,7 +38,7 @@ class ConditionalGenerativeSchNet(AtomisticModel):
 
     def __init__(
         self,
-        representation: List[SchNet, PaiNN],
+        representation: Optional[SchNet, PaiNN, LEFTNet],
         atom_types: List[int],
         origin_type: int,
         focus_type: int,

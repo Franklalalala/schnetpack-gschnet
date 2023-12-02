@@ -247,7 +247,11 @@ def generate_molecules(
             inputs = model.predict_type(inputs, use_log_probabilities=False)
             type_predictions = inputs[properties.distribution_Z]
             # sample the type of the next atom
-            sampled_classes = torch.multinomial(type_predictions, 1).view(-1)
+            try:
+                sampled_classes = torch.multinomial(type_predictions, 1).view(-1)
+            except:
+                type_predictions = torch.where(torch.isnan(type_predictions), torch.tensor([0,0,0,0,1], device=type_predictions.device), type_predictions)
+                sampled_classes = torch.multinomial(type_predictions, 1).view(-1)
             next_types[mol_mask] = model.classes_to_types(sampled_classes)
             # mark focus as unavailable for molecules where the stop type was sampled
             sampled_stop = torch.logical_and(next_types == model.stop_type, mol_mask)
